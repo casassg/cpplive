@@ -1,0 +1,133 @@
+<!doctype html>
+<!-- See http://www.firepad.io/docs/ for detailed embedding docs. -->
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+
+    <!-- CodeMirror and its JavaScript mode file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/mode/clike/clike.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css"/>
+
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            crossorigin="anonymous"></script>
+    <!-- Firepad -->
+    <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <style>
+
+    </style>
+</head>
+
+<body onload="init()">
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">CPP Live</a>
+        </div>
+    </div>
+    <button id="run" type="button" class="btn btn-default navbar-btn">RUN</button>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="firepad-container" style="height: 50%"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div id="output" style="height: 50%">
+                <h2>Output</h2>
+
+                <p></p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="error" style="height: 50%">
+                <h2>Error</h2>
+
+                <p style="color: red"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function init() {
+        //// Initialize Firebase.
+        //// TODO: replace with your Firebase project configuration.
+        var config = {
+            apiKey: "AIzaSyC_JdByNm-E1CAJUkePsr-YJZl7W77oL3g",
+            authDomain: "firepad-tests.firebaseapp.com",
+            databaseURL: "https://cpplive-581b1.firebaseio.com"
+        };
+        firebase.initializeApp(config);
+
+        //// Get Firebase Database reference.
+        var firepadRef = getExampleRef();
+
+        //// Create CodeMirror (with line numbers and the JavaScript mode).
+        var codeMirror = CodeMirror(document.getElementById('firepad-container'), {
+            lineNumbers: true,
+            mode: 'clike'
+        });
+
+        //// Create Firepad.
+        var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
+            defaultText: '#include <iostream>\n using namespace std;\n ' +
+            'int main(){\n' + ' cout << "Hello World!"\n }'
+        });
+
+        $('#run').click(function () {
+            var $error = $("#error p");
+            var $output = $("#output p");
+            $error.html('');
+            $output.html('');
+
+            var code = firepad.getText();
+            var body = {
+                code: code
+            };
+            jQuery.post("/execute", body).done(function (data) {
+                var obj = JSON.parse(data);
+                $output.html(obj['out']);
+                $error.html(obj['err']);
+            });
+        });
+    }
+
+    // Helper to get hash from end of URL or generate a random one.
+    function getExampleRef() {
+        var ref = firebase.database().ref();
+        var hash = window.location.hash.replace(/#/g, '');
+        if (hash) {
+            ref = ref.child(hash);
+        } else {
+            ref = ref.push(); // generate unique location.
+            window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
+        }
+        if (typeof console !== 'undefined') {
+            console.log('Firebase data: ', ref.toString());
+        }
+        return ref;
+    }
+</script>
+</body>
+</html>
