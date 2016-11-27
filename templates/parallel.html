@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <!-- Firebase -->
+    <title>CPP Live</title>
     <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 
     <!-- CodeMirror and its JavaScript mode file -->
@@ -21,8 +22,7 @@
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://bootswatch.com/sandstone/bootstrap.min.css">
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
@@ -35,14 +35,23 @@
 
 <body onload="init()">
 
+
 <nav class="navbar navbar-default">
-    <div class="container-fluid">
+     <div class="container-fluid">  
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">CPP Live</a>
-        </div>
-    </div>
-    <button id="run" type="button" class="btn btn-default navbar-btn">RUN</button>
-</nav>
+             <button type="button" class="collapsed navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-3" aria-expanded="false"> 
+                <span class="sr-only">Toggle navigation</span> 
+                <span class="icon-bar"></span> 
+                <span class="icon-bar"></span> 
+                <span class="icon-bar"></span> 
+            </button> 
+            <a href="#" class="navbar-brand">CPP LIVE</a> 
+        </div> 
+        <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-3"> 
+            <button type="button" class="btn btn-default navbar-btn" id="run">Run</button> 
+        </div> 
+    </div> 
+</nav>  
 
 <div class="container-fluid">
     <div class="row">
